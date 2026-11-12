@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.types import Message
@@ -19,10 +20,19 @@ TOKEN = os.getenv("BOT_TOKEN")
 if not TOKEN:
     sys.exit("Ошибка: переменная BOT_TOKEN не установлена в .env файле")
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
 
+# give a instrument to write logs
+logger = logging.getLogger(__name__)
 
 # Dispatcher is a central point for handling all incoming updates
 dp = Dispatcher()
+
+# Bot initialization trigger on press (run code)
+@dp.startup()
+async def on_startup(bot: Bot):
+    bot_info = await bot.get_me()
+    logger.info(f"Bot @{bot_info.username} successfully started!")
 
 
 # /start
